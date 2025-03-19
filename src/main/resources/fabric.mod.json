@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "slurryapi",
+  "version": "${version}",
+  "name": "SlurryApi",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "LGPL-3.0",
+  "icon": "assets/slurryapi/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "dev.turtywurty.fabricslurryapi.client.FabricSlurryApiClient"
+    ],
+    "main": [
+      "dev.turtywurty.fabricslurryapi.FabricSlurryApi"
+    ]
+  },
+  "mixins": [
+    "slurryapi.mixins.json",
+    {
+      "config": "slurryapi.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "java": ">=21",
+    "fabric": "*",
+    "minecraft": "~1.21-"
+  }
+}
