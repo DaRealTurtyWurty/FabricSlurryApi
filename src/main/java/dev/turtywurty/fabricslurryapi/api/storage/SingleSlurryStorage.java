@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 
 import java.util.Objects;
 
@@ -31,11 +33,11 @@ public abstract class SingleSlurryStorage extends SingleVariantStorage<SlurryVar
         return SlurryVariant.blank();
     }
 
-    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup wrapperLookup) {
-        SingleVariantStorage.readNbt(this, SlurryVariant.CODEC, SlurryVariant::blank, nbt, wrapperLookup);
+    public void readData(ReadView view) {
+        SingleVariantStorage.readData(this, SlurryVariant.CODEC, SlurryVariant::blank, view);
     }
 
-    public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup wrapperLookup) {
-        SingleVariantStorage.writeNbt(this, SlurryVariant.CODEC, nbt, wrapperLookup);
+    public void writeNbt(WriteView view) {
+        SingleVariantStorage.writeData(this, SlurryVariant.CODEC, view);
     }
 }

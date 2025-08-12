@@ -4,6 +4,8 @@ import dev.turtywurty.fabricslurryapi.FabricSlurryApi;
 import dev.turtywurty.fabricslurryapi.api.Slurry;
 import dev.turtywurty.fabricslurryapi.api.SlurryVariant;
 import net.minecraft.component.ComponentChanges;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.MergedComponentMap;
 import net.minecraft.registry.entry.RegistryEntry;
 
 import java.util.Objects;
@@ -24,11 +26,13 @@ public final class SlurryVariantImpl implements SlurryVariant {
 
     private final Slurry slurry;
     private final ComponentChanges components;
+    private final ComponentMap componentMap;
     private final int hashCode;
 
     private SlurryVariantImpl(Slurry slurry, ComponentChanges components) {
         this.slurry = slurry;
         this.components = components;
+        this.componentMap = components == ComponentChanges.EMPTY ? ComponentMap.EMPTY : MergedComponentMap.create(ComponentMap.EMPTY, components);
         this.hashCode = Objects.hash(slurry, components);
     }
 
@@ -45,6 +49,11 @@ public final class SlurryVariantImpl implements SlurryVariant {
     @Override
     public ComponentChanges getComponents() {
         return this.components;
+    }
+
+    @Override
+    public ComponentMap getComponentMap() {
+        return this.componentMap;
     }
 
     @Override
