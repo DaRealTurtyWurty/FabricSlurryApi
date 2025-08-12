@@ -12,17 +12,14 @@ import org.jetbrains.annotations.Nullable;
 
 public final class SlurryVariantAttributes {
     private static final ApiProviderMap<Slurry, SlurryVariantAttributeHandler> HANDLERS = ApiProviderMap.create();
-    private static final SlurryVariantAttributeHandler DEFAULT_HANDLER = new SlurryVariantAttributeHandler() {
-        @Override
-        public Text getName(SlurryVariant slurryVariant) {
-            RegistryEntry<Slurry> registryEntry = slurryVariant.getRegistryEntry();
-            if (registryEntry.getKey().isPresent()) {
-                Identifier id = registryEntry.getKey().get().getValue();
-                return Text.translatable("slurry." + id.getNamespace() + "." + id.getPath());
-            }
-
-            return Text.translatable("slurry." + FabricSlurryApi.MOD_ID + ".unknown");
+    private static final SlurryVariantAttributeHandler DEFAULT_HANDLER = slurryVariant -> {
+        RegistryEntry<Slurry> registryEntry = slurryVariant.getRegistryEntry();
+        if (registryEntry.getKey().isPresent()) {
+            Identifier id = registryEntry.getKey().get().getValue();
+            return Text.translatable("slurry." + id.getNamespace() + "." + id.getPath());
         }
+
+        return Text.translatable("slurry." + FabricSlurryApi.MOD_ID + ".unknown");
     };
 
     public static void register(Slurry slurry, SlurryVariantAttributeHandler handler) {
