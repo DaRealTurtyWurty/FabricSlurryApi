@@ -3,36 +3,36 @@ package dev.turtywurty.fabricslurryapi.impl;
 import dev.turtywurty.fabricslurryapi.FabricSlurryApi;
 import dev.turtywurty.fabricslurryapi.api.Slurry;
 import dev.turtywurty.fabricslurryapi.api.SlurryVariant;
-import net.minecraft.component.ComponentChanges;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.component.MergedComponentMap;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.PatchedDataComponentMap;
 
 import java.util.Objects;
 
 public final class SlurryVariantImpl implements SlurryVariant {
-    public static SlurryVariant of(Slurry slurry, ComponentChanges components) {
+    public static SlurryVariant of(Slurry slurry, DataComponentPatch components) {
         Objects.requireNonNull(slurry, "Slurry may not be null.");
         Objects.requireNonNull(components, "Components may not be null.");
 
         return new SlurryVariantImpl(slurry, components);
     }
 
-    public static SlurryVariant of(RegistryEntry<Slurry> slurry, ComponentChanges components) {
+    public static SlurryVariant of(Holder<Slurry> slurry, DataComponentPatch components) {
         Objects.requireNonNull(slurry, "Slurry may not be null.");
 
         return of(slurry.value(), components);
     }
 
     private final Slurry slurry;
-    private final ComponentChanges components;
-    private final ComponentMap componentMap;
+    private final DataComponentPatch components;
+    private final DataComponentMap componentMap;
     private final int hashCode;
 
-    private SlurryVariantImpl(Slurry slurry, ComponentChanges components) {
+    private SlurryVariantImpl(Slurry slurry, DataComponentPatch components) {
         this.slurry = slurry;
         this.components = components;
-        this.componentMap = components == ComponentChanges.EMPTY ? ComponentMap.EMPTY : MergedComponentMap.create(ComponentMap.EMPTY, components);
+        this.componentMap = components == DataComponentPatch.EMPTY ? DataComponentMap.EMPTY : PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, components);
         this.hashCode = Objects.hash(slurry, components);
     }
 
@@ -47,12 +47,12 @@ public final class SlurryVariantImpl implements SlurryVariant {
     }
 
     @Override
-    public ComponentChanges getComponents() {
+    public DataComponentPatch getComponentsPatch() {
         return this.components;
     }
 
     @Override
-    public ComponentMap getComponentMap() {
+    public DataComponentMap getComponents() {
         return this.componentMap;
     }
 
@@ -66,8 +66,8 @@ public final class SlurryVariantImpl implements SlurryVariant {
 
     @Override
     public boolean equals(Object obj) {
-        if(this == obj) return true;
-        if(obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
 
         SlurryVariantImpl that = (SlurryVariantImpl) obj;
         return this.hashCode == that.hashCode && this.slurry.matchesType(that.slurry) && componentsMatch(that.components);

@@ -1,19 +1,21 @@
 package dev.turtywurty.fabricslurryapi;
 
+import com.mojang.serialization.Lifecycle;
 import dev.turtywurty.fabricslurryapi.api.Slurry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
-import net.minecraft.registry.DefaultedRegistry;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.DefaultedMappedRegistry;
+import net.minecraft.core.DefaultedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 
 public class FabricSlurryApi implements ModInitializer {
     public static final String MOD_ID = "slurryapi";
 
-    public static final RegistryKey<Registry<Slurry>> SLURRIES_REGISTRY_KEY = RegistryKey.ofRegistry(id("slurries"));
-    public static final DefaultedRegistry<Slurry> SLURRIES = FabricRegistryBuilder.createDefaulted(SLURRIES_REGISTRY_KEY, FabricSlurryApi.id("empty"))
+    public static final ResourceKey<Registry<Slurry>> SLURRIES_REGISTRY_KEY = ResourceKey.createRegistryKey(id("slurries"));
+    public static final DefaultedRegistry<Slurry> SLURRIES = FabricRegistryBuilder.from(new DefaultedMappedRegistry<>(FabricSlurryApi.id("empty").toString(), SLURRIES_REGISTRY_KEY, Lifecycle.stable(), true))
             .attribute(RegistryAttribute.MODDED)
             .attribute(RegistryAttribute.SYNCED)
             .buildAndRegister();
@@ -21,11 +23,12 @@ public class FabricSlurryApi implements ModInitializer {
     public static final Slurry EMPTY = register("empty");
 
     public static Identifier id(String path) {
-        return Identifier.of(MOD_ID, path);
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 
     @Override
-    public void onInitialize() {}
+    public void onInitialize() {
+    }
 
     public static Slurry register(String id) {
         Identifier identifier = id(id);

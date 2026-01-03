@@ -3,10 +3,8 @@ package dev.turtywurty.fabricslurryapi.api.storage;
 import dev.turtywurty.fabricslurryapi.api.SlurryVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.Objects;
 
@@ -33,11 +31,11 @@ public abstract class SingleSlurryStorage extends SingleVariantStorage<SlurryVar
         return SlurryVariant.blank();
     }
 
-    public void readData(ReadView view) {
-        SingleVariantStorage.readData(this, SlurryVariant.CODEC, SlurryVariant::blank, view);
+    public void readData(ValueInput view) {
+        SingleVariantStorage.readValue(this, SlurryVariant.CODEC, SlurryVariant::blank, view);
     }
 
-    public void writeNbt(WriteView view) {
-        SingleVariantStorage.writeData(this, SlurryVariant.CODEC, view);
+    public void writeNbt(ValueOutput view) {
+        SingleVariantStorage.writeValue(this, SlurryVariant.CODEC, view);
     }
 }

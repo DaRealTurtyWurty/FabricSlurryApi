@@ -7,7 +7,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.ExtractionOnlyStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 import java.util.function.Function;
 
@@ -19,7 +19,7 @@ public class FullItemSlurryStorage implements ExtractionOnlyStorage<SlurryVarian
     private final long containedAmount;
 
     public FullItemSlurryStorage(ContainerItemContext context, Item fullItem, SlurryVariant containedSlurry, long containedAmount) {
-        this(context, fullVariant -> ItemVariant.of(fullItem, fullVariant.getComponents()), containedSlurry, containedAmount);
+        this(context, fullVariant -> ItemVariant.of(fullItem, fullVariant.getComponentsPatch()), containedSlurry, containedAmount);
     }
 
     public FullItemSlurryStorage(ContainerItemContext context, Function<ItemVariant, ItemVariant> fullToEmptyMapping, SlurryVariant containedSlurry, long containedAmount) {
@@ -36,11 +36,11 @@ public class FullItemSlurryStorage implements ExtractionOnlyStorage<SlurryVarian
     public long extract(SlurryVariant resource, long maxAmount, TransactionContext transaction) {
         StoragePreconditions.notBlankNotNegative(resource, maxAmount);
 
-        if(!context.getItemVariant().isOf(fullItem)) return 0;
+        if (!context.getItemVariant().isOf(fullItem)) return 0;
 
-        if(resource.equals(containedSlurry) && maxAmount >= containedAmount) {
+        if (resource.equals(containedSlurry) && maxAmount >= containedAmount) {
             ItemVariant emptyItem = fullToEmptyMapping.apply(context.getItemVariant());
-            if(context.exchange(emptyItem, 1, transaction) == 1) {
+            if (context.exchange(emptyItem, 1, transaction) == 1) {
                 return containedAmount;
             }
         }

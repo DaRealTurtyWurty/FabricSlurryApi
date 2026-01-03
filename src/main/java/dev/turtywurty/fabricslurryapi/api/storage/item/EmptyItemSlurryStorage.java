@@ -9,7 +9,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.BlankVariantView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.InsertionOnlyStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -25,7 +25,7 @@ public class EmptyItemSlurryStorage implements InsertionOnlyStorage<SlurryVarian
     private final List<StorageView<SlurryVariant>> blankView;
 
     public EmptyItemSlurryStorage(ContainerItemContext context, Item fullItem, Slurry insertableSlurry, long insertableAmount) {
-        this(context, emptyVariant -> ItemVariant.of(fullItem, emptyVariant.getComponents()), insertableSlurry, insertableAmount);
+        this(context, emptyVariant -> ItemVariant.of(fullItem, emptyVariant.getComponentsPatch()), insertableSlurry, insertableAmount);
     }
 
     public EmptyItemSlurryStorage(ContainerItemContext context, Function<ItemVariant, ItemVariant> emptyToFullMapping, Slurry insertableSlurry, long insertableAmount) {

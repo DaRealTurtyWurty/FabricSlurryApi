@@ -5,23 +5,23 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.turtywurty.fabricslurryapi.FabricSlurryApi;
 import dev.turtywurty.fabricslurryapi.impl.SlurryVariantImpl;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
-import net.minecraft.component.ComponentChanges;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.NonExtendable
 public interface SlurryVariant extends TransferVariant<Slurry> {
     Codec<SlurryVariant> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            FabricSlurryApi.SLURRIES.getEntryCodec().fieldOf("slurry").forGetter(SlurryVariant::getRegistryEntry),
-            ComponentChanges.CODEC.optionalFieldOf("components", ComponentChanges.EMPTY).forGetter(SlurryVariant::getComponents)
+            FabricSlurryApi.SLURRIES.holderByNameCodec().fieldOf("slurry").forGetter(SlurryVariant::typeHolder),
+            DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(SlurryVariant::getComponentsPatch)
     ).apply(instance, SlurryVariantImpl::of));
 
-    PacketCodec<RegistryByteBuf, SlurryVariant> PACKET_CODEC = PacketCodec.tuple(
-            PacketCodecs.registryEntry(FabricSlurryApi.SLURRIES_REGISTRY_KEY), SlurryVariant::getRegistryEntry,
-            ComponentChanges.PACKET_CODEC, SlurryVariant::getComponents,
+    StreamCodec<RegistryFriendlyByteBuf, SlurryVariant> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.holderRegistry(FabricSlurryApi.SLURRIES_REGISTRY_KEY), SlurryVariant::typeHolder,
+            DataComponentPatch.STREAM_CODEC, SlurryVariant::getComponentsPatch,
             SlurryVariantImpl::of);
 
     static SlurryVariant blank() {
@@ -29,10 +29,10 @@ public interface SlurryVariant extends TransferVariant<Slurry> {
     }
 
     static SlurryVariant of(Slurry slurry) {
-        return of(slurry, ComponentChanges.EMPTY);
+        return of(slurry, DataComponentPatch.EMPTY);
     }
 
-    static SlurryVariant of(Slurry slurry, ComponentChanges componentChanges) {
+    static SlurryVariant of(Slurry slurry, DataComponentPatch componentChanges) {
         return SlurryVariantImpl.of(slurry, componentChanges);
     }
 
@@ -40,7 +40,8 @@ public interface SlurryVariant extends TransferVariant<Slurry> {
         return getObject();
     }
 
-    default RegistryEntry<Slurry> getRegistryEntry() {
-        return FabricSlurryApi.SLURRIES.getEntry(getSlurry());
+    @Override
+    default Holder<Slurry> typeHolder() {
+        return getSlurry().builtInRegistryHolder();
     }
 }
