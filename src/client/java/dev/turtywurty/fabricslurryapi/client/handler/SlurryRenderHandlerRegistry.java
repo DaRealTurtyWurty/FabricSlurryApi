@@ -2,13 +2,13 @@ package dev.turtywurty.fabricslurryapi.client.handler;
 
 import dev.turtywurty.fabricslurryapi.api.Slurry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.BlockPos;
 import net.minecraft.data.AtlasIds;
-import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.IdentityHashMap;
@@ -23,7 +23,7 @@ public final class SlurryRenderHandlerRegistry {
         public TextureAtlasSprite getSprite(@Nullable BlockAndTintGetter view, @Nullable BlockPos pos) {
             if (missingSprite == null) {
                 missingSprite = Minecraft.getInstance().getAtlasManager()
-                        .get(new Material(TextureAtlas.LOCATION_BLOCKS, MissingTextureAtlasSprite.getLocation()));
+                        .get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, MissingTextureAtlasSprite.getLocation()));
             }
 
             return missingSprite;

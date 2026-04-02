@@ -2,9 +2,9 @@ package dev.turtywurty.fabricslurryapi.client.handler;
 
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.Nullable;
 
 public class SimpleSlurryRenderHandler implements SlurryRenderHandler {
@@ -21,9 +21,9 @@ public class SimpleSlurryRenderHandler implements SlurryRenderHandler {
         this(texture, -1);
     }
 
-        @Override
-        public TextureAtlasSprite getSprite(@Nullable BlockAndTintGetter view, @Nullable BlockPos pos) {
-            return sprites[0];
+    @Override
+    public TextureAtlasSprite getSprite(@Nullable BlockAndTintGetter view, @Nullable BlockPos pos) {
+        return sprites[0];
     }
 
     @Override

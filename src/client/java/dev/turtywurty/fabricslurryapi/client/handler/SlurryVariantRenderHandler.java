@@ -1,11 +1,11 @@
 package dev.turtywurty.fabricslurryapi.client.handler;
 
 import dev.turtywurty.fabricslurryapi.api.SlurryVariant;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
